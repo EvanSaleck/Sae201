@@ -1,10 +1,15 @@
 package ihm;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -12,26 +17,38 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class princ extends Stage {
+	// Stage
+	//private Stage deuxStage;
+	//private Stage troisStage;
+	
+	// Insets
+	Insets tab = new Insets(40);
+
 	// Vbox
 	VBox root = new VBox();
 	
-	// Hbox
+	// StackPane
 	StackPane zoneheader = new StackPane();
-
 	
+	//HBox 
+	HBox zonetab = new HBox();
+	HBox zonebtn = new HBox();
 	// Couleur Customs 
 	Color header = Color.web("#5FA4E3");
 	
+	// Boutons
+	Button buttonPagePrestations = new Button("Voir les Prestations");
+	Button buttonPageChambres = new Button("Voir les Chambres");
 	
 	// Textes 
 	Label HeadText = new Label("Le Cheval Blanc - Accueil");
+	Label Welcome = new Label("Bonjour, Voici les arrivées prévues :");
+	Label Choix = new Label("Si vous souhaitez voir les Chambres et les prestations, "
+			+ "");
 	
 	Rectangle head = new Rectangle();
 	
@@ -66,7 +83,39 @@ public class princ extends Stage {
 	this.setScene(laScene);
 	}
 	
+	@SuppressWarnings({ "exports", "unchecked" })
 	public Parent creerContenu(){
+	      TableView<Person> Arrivees = new TableView<>();
+
+	        TableColumn<Person, String> firstNameColumn = new TableColumn<>("First Name");
+	        TableColumn<Person, String> lastNameColumn = new TableColumn<>("Last Name");
+
+	        Arrivees.getColumns().addAll(firstNameColumn, lastNameColumn);
+	        
+	        Arrivees.setPrefWidth(840);
+	        Arrivees.setPrefHeight(600);
+		// Bouton de tp de pages
+		
+
+		buttonPageChambres.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		        //Page1 page1 = new Page1();
+		        //Scene page1Scene = new Scene(page1, 400, 300);
+		        //deuxStage.setScene(page1Scene);
+		    }
+		});
+
+
+		buttonPagePrestations.setOnAction(new EventHandler<ActionEvent>() {
+		    @Override
+		    public void handle(ActionEvent event) {
+		        //Page2 page2 = new Page2();
+		        //Scene page2Scene = new Scene(page2, 400, 300);
+		        //troisStage.setScene(page2Scene);
+		    }
+		});
+
 		// Texte sur le header
 		HeadText.setStyle("-fx-font-size:38  ; -fx-translate-x: 20px;");
 		HeadText.setFont(cheval);
@@ -105,10 +154,26 @@ public class princ extends Stage {
 		logoutvue.setFitHeight(40);
 		logoutvue.setStyle("-fx-translate-x: -20px;");
 		
-		// Ajout de toutes nos entités dans la Hbox du header
+		// Zone tableau
+		Welcome.setPadding(tab);
+		Welcome.setStyle("-fx-font-size: 20px;-fx-translate-x: -20px;");
+		Welcome.setFont(cheval);
+		
+		// Zone Bouton
+
+		
+		// Ajout de toutes nos entités dans mes zones
+		zonebtn.getChildren().addAll(Choix, buttonPagePrestations, buttonPageChambres);
+		
+		zonetab.getChildren().addAll(Welcome, Arrivees);
+		
 		zoneheader.getChildren().addAll(head, HeadText, gearvue, lignevue, uservue, lignevue2, logoutvue);
 		
-		root.getChildren().addAll(zoneheader);
+		root.getChildren().addAll(zoneheader, zonetab, zonebtn);
 		return root;
 	}
+	
+
 }
+
+
