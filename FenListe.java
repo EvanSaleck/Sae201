@@ -33,61 +33,35 @@ public class FenListe extends Stage {
 	Font cheval = Font.loadFont("file:./font/jeju.ttf", 45);
 
 
-	private VBox		vbox			= new VBox();
+	private VBox vbox = new VBox();
 
-	private BorderPane	racine			= new BorderPane();
+	private BorderPane racine = new BorderPane();
 
-	private HBox		main			= new HBox();
-	private ObservableList<Arrivee> doList = FXCollections.observableArrayList();
+	private HBox main = new HBox();
+	TableView<Arrivee> table = new TableView<Arrivee>();
 
 
-	Arrivee client = new Arrivee(123, 204, 3, 190394934, "Bob");
 
-	final ObservableList<Arrivee> data = FXCollections.observableArrayList(
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"),
-			new Arrivee(256, 320, 2, 873124234, "Michel"));
+	ObservableList<Arrivee> data = FXCollections.observableArrayList(
+			new Arrivee(256, 320, 2, 873124234, "Michel", "2023-06-16"),
+			new Arrivee(257, 321, 1, 873124235, "Sophie", "2023-06-17"),
+			new Arrivee(258, 322, 3, 873124236, "Jean", "2023-06-18"),
+			new Arrivee(259, 323, 3, 873124237, "Benoît", "2023-06-15"),
+			new Arrivee(260, 324, 3, 873124238, "Ludovic", "2023-06-15"),
+			new Arrivee(261, 325, 4, 873124239, "Alan", "2023-06-15"),
+			new Arrivee(262, 326, 2, 873124240, "Delphine", "2023-06-15"),
+			new Arrivee(263, 327, 1, 873124241, "Evan", "2023-06-15"),
+			new Arrivee(264, 328, 1, 873124242, "Gabin", "2023-06-15"),
+			new Arrivee(265, 329, 2, 873124243, "Arnaud", "2023-06-15"),
+			new Arrivee(266, 330, 4, 873124243, "Bob", "2023-06-15"),
+			new Arrivee(267, 331, 3, 873124243, "Jack", "2023-06-15"),
+			new Arrivee(268, 332, 2, 873124243, "Paul", "2023-06-15"));
+
+	ObservableList<Arrivee> cloneData = FXCollections.observableArrayList(data);
 
 	private Pagination pagination;
 
 	public FenListe() throws FileNotFoundException {
-		doList.add(client);
-		doList.add(client);
-		doList.add(client);
-		doList.add(client);
-		doList.add(client);
-		doList.add(client);
 
 		this.setTitle("Hotel le cheval Blanc");
 		this.setMinWidth(960);
@@ -100,16 +74,79 @@ public class FenListe extends Stage {
 		this.initModality(Modality.APPLICATION_MODAL);
 		this.setScene(laScene);
 	}
-	
-	public Parent creerContenu(){
+
+	public Parent creerContenu() {
 
 		// Création de la topbar
 		HBox topBar = new HBox();
 		HBox underBar = new HBox();
 
 		Label date = new Label("Date :");
+		final LocalDate today = LocalDate.now();
 
-		DatePicker checkInDatePicker = new DatePicker(LocalDateTime.now().toLocalDate());
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setAlignment(Pos.TOP_LEFT);
+
+		DatePicker datePicker = new DatePicker();
+		datePicker.setDayCellFactory(picker -> new DateCell() {
+			@Override
+			public void updateItem(LocalDate date, boolean empty) {
+				super.updateItem(date, empty);
+				if (date.isBefore(LocalDate.now())) {
+					setDisable(true);
+					setStyle("-fx-background-color: #cccccc;"); // Couleur de fond pour les dates désactivées
+				}
+			}
+		});
+
+		datePicker.setOnAction(event -> {
+			LocalDate selectedDate = datePicker.getValue();
+
+			// Filtrer les éléments de l'ObservableList en fonction de la date sélectionnée
+			ObservableList<Arrivee> filteredList = FXCollections.observableArrayList();
+
+			if(selectedDate == null) {
+				return;
+			}
+
+			System.out.println("taille " + cloneData.size());
+
+			for (Arrivee arrivee : cloneData) {
+				if (arrivee.convertDateToLocalDate().isEqual(selectedDate)) {
+					filteredList.add(arrivee);
+					System.out.println(selectedDate + " - " + arrivee.getNom());
+				}
+			}
+
+			// Mettre à jour les données du TableView avec les éléments filtrés
+			table.setItems(filteredList);
+			data.setAll(filteredList);
+			pagination.setPageCount((int) Math.ceil((double) filteredList.size() / rowsPerPage()));
+
+		});
+
+		Button reloadButton = new Button("Recharger");
+		reloadButton.setPrefWidth(100);
+
+		reloadButton.getStyleClass().add("button-style");
+
+
+		reloadButton.setOnMouseClicked(e -> {
+			data = FXCollections.observableArrayList(cloneData);
+			table.setItems(data);
+			pagination.setPageCount((int) Math.ceil((double) data.size() / rowsPerPage()));
+			datePicker.setValue(null);
+		});
+
+		Button addButton = new Button("Ajouter");
+		addButton.setPrefWidth(100);
+
+		addButton.getStyleClass().add("button-style");
+
+		grid.add(datePicker, 0, 0);
+
 
 
 		date.setStyle("-fx-font-size: 30; -fx-translate-x: 20px;");
@@ -118,11 +155,11 @@ public class FenListe extends Stage {
 		underBar.setAlignment(Pos.CENTER_LEFT);
 		underBar.setSpacing(30);
 
-		underBar.getChildren().addAll(date, checkInDatePicker);
+		underBar.getChildren().addAll(date, datePicker, reloadButton, addButton);
 
 		underBar.setPrefHeight(50);
 
-		topBar.setStyle("-fx-background-color: #5FA4E3;");
+		topBar.setStyle("-fx-background-color: #0070C0;");
 
 		topBar.prefHeightProperty().bind(this.heightProperty().multiply(0.1));
 
@@ -150,7 +187,11 @@ public class FenListe extends Stage {
 		gearvue.setOnMouseExited(event -> {
 			gearvue.getStyleClass().remove("hoverable-image");
 		});
+
 		// Ligne
+		Image logo = new Image(getClass().getResourceAsStream("imgcheval.png"));
+		ImageView logovue = new ImageView(logo);
+
 		Image ligne = new Image(getClass().getResourceAsStream("ligne.png"));
 		ImageView lignevue = new ImageView(ligne);
 		// User
@@ -183,6 +224,10 @@ public class FenListe extends Stage {
 		lignevue2.setFitHeight(75);
 		lignevue2.setStyle("-fx-translate-x: -90px;");
 
+		StackPane.setAlignment(logovue, Pos.CENTER_LEFT);
+		logovue.setFitWidth(100);
+		logovue.setFitHeight(100);
+
 		StackPane.setAlignment(logoutvue, Pos.CENTER_RIGHT);
 		logoutvue.setFitWidth(40);
 		logoutvue.setFitHeight(40);
@@ -192,9 +237,9 @@ public class FenListe extends Stage {
 
 		Label headText = new Label("Le Cheval Blanc - Arrivées");
 
-		zoneheader.getChildren().addAll(topBar, headText, gearvue, lignevue, uservue, lignevue2, logoutvue);
+		zoneheader.getChildren().addAll(topBar, headText, gearvue, lignevue, uservue, lignevue2, logoutvue, logovue);
 
-		headText.setStyle("-fx-font-size:38  ; -fx-translate-x: 20px;");
+		headText.setStyle("-fx-font-size:38  ; -fx-translate-x: 100px;");
 		headText.setFont(cheval);
 		headText.setTextFill(Color.WHITESMOKE);
 		StackPane.setAlignment(headText, Pos.CENTER_LEFT);
@@ -203,6 +248,21 @@ public class FenListe extends Stage {
 
 		racine.setTop(container);
 
+		createPagination();
+
+
+		VBox paginationContainer = new VBox(pagination);
+		paginationContainer.setPadding(new Insets(70)); // Définir le padding désiré
+
+		vbox.getChildren().addAll(racine, paginationContainer);
+
+		vbox.setStyle("-fx-background-color:#0000;");
+
+		return vbox;
+	}
+
+	private void createPagination() {
+		System.out.println(data.size() + "\n" + table.getItems().size());
 		pagination = new Pagination((data.size() / rowsPerPage() + 1), 0);
 		//   pagination = new Pagination(20 , 0);
 		pagination.setPageFactory(new Callback<Integer, Node>() {
@@ -217,16 +277,6 @@ public class FenListe extends Stage {
 		});
 
 		pagination.getStyleClass().add("custom-pagination");
-
-
-		VBox paginationContainer = new VBox(pagination);
-		paginationContainer.setPadding(new Insets(70)); // Définir le padding désiré
-
-		vbox.getChildren().addAll(racine, paginationContainer);
-
-		vbox.setStyle("-fx-background-color:#0000;");
-
-		return vbox;
 	}
 
 
@@ -243,7 +293,7 @@ public class FenListe extends Stage {
 		int page = pageIndex * itemsPerPage();
 
 		for (int i = page; i < page + itemsPerPage(); i++) {
-			TableView<Arrivee> table = new TableView<Arrivee>();
+
 
 			// Create column UserName (Data type of String).
 			TableColumn<Arrivee, String> IDReservation //
@@ -271,11 +321,11 @@ public class FenListe extends Stage {
 
 			table.getColumns().addAll(IDReservation, IDChambre, NbOccupants, clientID, clientName, iconColumn);
 
-			IDReservation.setCellValueFactory(new PropertyValueFactory<>("reservationID"));
-			IDChambre.setCellValueFactory(new PropertyValueFactory<>("ChambreID"));
-			NbOccupants.setCellValueFactory(new PropertyValueFactory<>("nbOccupants"));
-			clientID.setCellValueFactory(new PropertyValueFactory<>("clientID"));
-			clientName.setCellValueFactory(new PropertyValueFactory<>("clientName"));
+			IDReservation.setCellValueFactory(new PropertyValueFactory<>("numresColumn"));
+			IDChambre.setCellValueFactory(new PropertyValueFactory<>("numchambColumn"));
+			NbOccupants.setCellValueFactory(new PropertyValueFactory<>("nboccup"));
+			clientID.setCellValueFactory(new PropertyValueFactory<>("num"));
+			clientName.setCellValueFactory(new PropertyValueFactory<>("nom"));
 
 			IDReservation.setEditable(false);
 			IDChambre.setEditable(false);
@@ -283,7 +333,6 @@ public class FenListe extends Stage {
 			clientID.setEditable(false);
 			clientName.setEditable(false);
 			iconColumn.setEditable(false);
-
 
 
 			IDReservation.setSortable(false);
@@ -294,8 +343,6 @@ public class FenListe extends Stage {
 			iconColumn.setSortable(false);
 
 
-
-
 			IDReservation.setReorderable(false);
 			IDChambre.setReorderable(false);
 			NbOccupants.setReorderable(false);
@@ -303,13 +350,16 @@ public class FenListe extends Stage {
 			clientName.setReorderable(false);
 			iconColumn.setReorderable(false);
 
+
+
+
 /**
-			IDReservation.prefWidthProperty().bind(this.widthProperty());
-			IDChambre.prefWidthProperty().bind(this.widthProperty());
-			NbOccupants.prefWidthProperty().bind(this.widthProperty());
-			clientID.prefWidthProperty().bind(this.widthProperty());
-			clientName.prefWidthProperty().bind(this.widthProperty());
-			iconColumn.prefWidthProperty().bind(this.widthProperty());
+ IDReservation.prefWidthProperty().bind(this.widthProperty());
+ IDChambre.prefWidthProperty().bind(this.widthProperty());
+ NbOccupants.prefWidthProperty().bind(this.widthProperty());
+ clientID.prefWidthProperty().bind(this.widthProperty());
+ clientName.prefWidthProperty().bind(this.widthProperty());
+ iconColumn.prefWidthProperty().bind(this.widthProperty());
  */
 
 			iconColumn.setCellFactory(column -> new TableCell<Arrivee, Void>() {
@@ -347,32 +397,5 @@ public class FenListe extends Stage {
 
 	public int rowsPerPage() {
 		return 9;
-	}
-
-
-
-	private ObservableList<Arrivee> getUserList() {
-
-		Arrivee user1 = new Arrivee(123, 204, 3, 190394934, "Bob");
-		Arrivee user2 = new Arrivee(324, 112, 4, 342332456, "Jean");
-		Arrivee user3 = new Arrivee(923, 320, 2, 873124234, "Michel");
-		Arrivee user4 = new Arrivee(287, 320, 2, 873124234, "Michel");
-		Arrivee user5 = new Arrivee(13, 320, 2, 873124234, "Michel");
-		Arrivee user6 = new Arrivee(237, 320, 2, 873124234, "Michel");
-		Arrivee user7 = new Arrivee(126, 320, 2, 873124234, "Michel");
-		Arrivee user8 = new Arrivee(356, 320, 2, 873124234, "Michel");
-		Arrivee user9 = new Arrivee(112, 320, 2, 873124234, "Michel");
-		Arrivee user10 = new Arrivee(390, 320, 2, 873124234, "Michel");
-		Arrivee user11 = new Arrivee(341, 320, 2, 873124234, "Michel");
-		Arrivee user12 = new Arrivee(256, 320, 2, 873124234, "Michel");
-
-		ArrayList<Arrivee> arrivees = new ArrayList<>(Arrays.asList(user1, user2, user3, user4, user5, user6, user7, user8));
-
-
-		arrivees.sort(Comparator.comparingInt(Arrivee::getReservationID));
-
-
-		ObservableList<Arrivee> list = FXCollections.observableArrayList(arrivees);
-		return list;
 	}
 }
