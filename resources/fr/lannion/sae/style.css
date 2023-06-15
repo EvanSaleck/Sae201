@@ -1,5 +1,5 @@
 .column-header {
-    -fx-background-color: #5FA4E3;
+    -fx-background-color: #0070C0;
 }
 
 .container {
@@ -78,7 +78,7 @@
 }
 
 .table-row-cell:selected .text {
-       -fx-fill: #5FA4E3;
+       -fx-fill: #0070C0;
 
 }
 
@@ -97,4 +97,10 @@
 .table-row-cell {
     -fx-border-color: black;
     -fx-border-width: 0 0 1 0;
+}
+
+.button-style {
+    -fx-background-color: #0070C0;
+    -fx-text-fill: white;
+    -fx-padding: 10px;
 }
