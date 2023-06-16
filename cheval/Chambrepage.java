@@ -344,6 +344,12 @@ public class Chambrepage extends Stage {
 			NbOccupants.setCellValueFactory(new PropertyValueFactory<>("nboccup"));
 			clientID.setCellValueFactory(new PropertyValueFactory<>("num"));
 			clientName.setCellValueFactory(new PropertyValueFactory<>("nom"));
+			
+			IDReservation.prefWidthProperty().bind(table.widthProperty().multiply(0.22));
+			IDChambre.prefWidthProperty().bind(table.widthProperty().multiply(0.22));
+			NbOccupants.prefWidthProperty().bind(table.widthProperty().multiply(0.2));
+	        clientID.prefWidthProperty().bind(table.widthProperty().multiply(0.17));
+	        clientName.prefWidthProperty().bind(table.widthProperty().multiply(0.17));
 
 			IDReservation.setEditable(false);
 			IDChambre.setEditable(false);
@@ -402,9 +408,11 @@ public class Chambrepage extends Stage {
 			} else {
 				table.setItems(FXCollections.observableArrayList(data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
 			}
-
+			
+			table.setStyle("-fx-overflow-x: hidden;");
 
 			box.getChildren().add(table);
+			
 		}
 		return box;
 	}

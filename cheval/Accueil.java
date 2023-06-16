@@ -134,18 +134,18 @@ public class Accueil extends Stage {
 	      numresColumn.setCellValueFactory(new PropertyValueFactory<>("numresColumn"));
 	      numchambColumn.setCellValueFactory(new PropertyValueFactory<>("numchambColumn"));
 	      nboccup.setCellValueFactory(new PropertyValueFactory<>("nboccup"));
-			clientID.setCellValueFactory(new PropertyValueFactory<>("num"));
-			clientName.setCellValueFactory(new PropertyValueFactory<>("nom"));
+	      clientID.setCellValueFactory(new PropertyValueFactory<>("num"));
+	      clientName.setCellValueFactory(new PropertyValueFactory<>("nom"));
 
 
 	      Arrivees.getColumns().addAll(numresColumn, numchambColumn, nboccup, clientID, clientName);
 
 	        
-	        numresColumn.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.25));
-	        numchambColumn.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.25));
-	        nboccup.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.3));
-	        clientID.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.1));
-	        clientName.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.1));
+	        numresColumn.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.15));
+	        numchambColumn.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.15));
+	        nboccup.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.2));
+	        clientID.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.25));
+	        clientName.prefWidthProperty().bind(Arrivees.widthProperty().multiply(0.25));
 
 	        numresColumn.setResizable(false);
 	        numchambColumn.setResizable(false);
