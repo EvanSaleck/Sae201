@@ -188,9 +188,11 @@ public class Prestations extends Stage{
 		Button back = new Button("< Retour");
 
 		back.setOnAction(e -> {
-            Stage stage = new Accueil();
-            this.setScene(stage.getScene());
+		    Accueil accueil = new Accueil();
+		    accueil.show();
+		    this.close();
 		});
+
 		
 		StackPane.setAlignment(back, Pos.BOTTOM_LEFT);
 		back.setStyle("-fx-translate-y: 975px; -fx-transale-x: -600px; -fx-background-color: #0070C0; -fx-text-fill: white; -fx-padding: 10px; -fx-effect: dropshadow( one-pass-box , black , 8 , 0.0 , 2 , 0 ); -fx-border-radius: 50px;");
@@ -266,20 +268,38 @@ public class Prestations extends Stage{
 
             boolean hasError = false;
 
-            try {
-                Prestation prestation = new Prestation(libelle, type, prix, date); // Remplacez null par la valeur de la date
-                // Faites quelque chose avec la prestation sauvegardée (par exemple, l'ajouter à une liste)
-                System.out.println("Prestation sauvegardée : " + prestation.toString());
+            // Vérifier si le champ libellé est vide
+            if (libelle.isEmpty()) {
+                libelleErrorLabel.setText("Le champ libellé est requis");
+                hasError = true;
+            } else {
+                libelleErrorLabel.setText(""); // Effacer le message d'erreur précédent
+            }
 
-                modalStage.close();
-            } catch (LibelleInvalideException ex) {
-                // Gérer l'exception de libellé invalide
-                ex.printStackTrace();
-            } catch (TarifInvalideException ex) {
-                // Gérer l'exception de tarif invalide
-                ex.printStackTrace();
+            // Vérifier si le champ prix est vide ou contient une valeur invalide
+            try {
+                prix = Double.parseDouble(prixField.getText());
+                prixErrorLabel.setText(""); // Effacer le message d'erreur précédent
+            } catch (NumberFormatException ex) {
+                prixErrorLabel.setText("Le champ prix est invalide");
+                hasError = true;
+            }
+
+            if (!hasError) {
+                try {
+                    Prestation prestation = new Prestation(libelle, type, prix, date); // Remplacez null par la valeur de la date
+                    // Faites quelque chose avec la prestation sauvegardée (par exemple, l'ajouter à une liste)
+                    System.out.println("Prestation sauvegardée : " + prestation.toString());
+
+                    modalStage.close();
+                } catch (LibelleInvalideException ex) {
+                    libelleErrorLabel.setText(ex.getMessage());
+                } catch (TarifInvalideException ex) {
+                    prixErrorLabel.setText(ex.getMessage());
+                }
             }
         });
+
 
         VBox vbox = new VBox(label, libelleField, libelleErrorLabel, radioButton1, radioButton2, radioButton3, datePicker, prixField, prixErrorLabel, closeButton, ApplyButton);
         vbox.setAlignment(Pos.CENTER);

@@ -297,9 +297,9 @@ public class Arrivepage  extends Stage {
 		Button button = new Button("< Retour");
 
 		button.setOnAction(e -> {
-            Stage stage2 = new Accueil();
-            System.out.println("caca");
-            this.setScene(stage2.getScene());
+		    Accueil accueil = new Accueil();
+		    accueil.show();
+		    this.close();
 		});
 
 

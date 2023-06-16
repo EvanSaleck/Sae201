@@ -104,3 +104,9 @@
     -fx-text-fill: white;
     -fx-padding: 10px;
 }
+
+.no-horizontal-scroll-bar .scroll-bar:horizontal {
+    -fx-opacity: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}

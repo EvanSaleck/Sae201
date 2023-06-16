@@ -255,9 +255,11 @@ public class Chambrepage extends Stage {
 		Button back = new Button("< Retour");
 
 		back.setOnAction(e -> {
-            Stage stage = new Accueil();
-            this.setScene(stage.getScene());
+		    Accueil accueil = new Accueil();
+		    accueil.show();
+		    this.close();
 		});
+
 		
 		StackPane.setAlignment(back, Pos.BOTTOM_LEFT);
 		back.setStyle("-fx-translate-y: 200px; -fx-transale-x: 500px; -fx-background-color: #0070C0; -fx-text-fill: white; -fx-padding: 10px; -fx-effect: dropshadow( one-pass-box , black , 8 , 0.0 , 2 , 0 ); -fx-border-radius: 50px;");
@@ -409,8 +411,9 @@ public class Chambrepage extends Stage {
 				table.setItems(FXCollections.observableArrayList(data.subList(pageIndex * rowsPerPage(), pageIndex * rowsPerPage() + rowsPerPage())));
 			}
 			
-			table.setStyle("-fx-overflow-x: hidden;");
-
+			// Supprimer la pagination par défaut
+			table.setTableMenuButtonVisible(false);
+			table.getStyleClass().add("no-horizontal-scroll-bar");
 			box.getChildren().add(table);
 			
 		}
